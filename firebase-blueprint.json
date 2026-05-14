@@ -1,0 +1,52 @@
+{
+  "entities": {
+    "user": {
+      "title": "User Profile",
+      "description": "User profile data linked to Firebase Auth",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "address": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "order": {
+      "title": "Order",
+      "description": "Customer order details and status",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "items": { 
+          "type": "array",
+          "items": { "type": "object" }
+        },
+        "total": { "type": "number" },
+        "status": { 
+          "type": "string", 
+          "enum": ["pending_payment", "paid", "packed", "shipped", "delivered"] 
+        },
+        "contactInfo": { "type": "object" },
+        "paymentReceipt": { "type": "string" },
+        "receiptTimestamp": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "items", "total", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "user",
+      "description": "User profile documents"
+    },
+    "/orders/{orderId}": {
+      "schema": "order",
+      "description": "Individual order documents"
+    }
+  }
+}

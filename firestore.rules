@@ -1,0 +1,90 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Primitives ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isAdmin() {
+      // Hardcoded admin for dev/production as per guidelines "Bootstrapped Admin"
+      return isSignedIn() && (
+        request.auth.token.email == 'amizhkeeran@gmail.com' && request.auth.token.email_verified == true
+      );
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Validation Blueprints ---
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email']) &&
+             data.uid is string && data.uid.size() <= 128 &&
+             data.email is string && data.email.size() <= 256;
+    }
+
+    function isValidOrder(data) {
+      return data.keys().hasAll(['userId', 'items', 'total', 'status', 'createdAt']) &&
+             data.userId == request.auth.uid &&
+             data.total is number && data.total >= 0 &&
+             data.status in ['pending_payment', 'paid', 'packed', 'shipped', 'delivered'] &&
+             data.items is list && data.items.size() <= 50;
+    }
+
+    // --- Collection Routes ---
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if (isOwner(userId) || isAdmin()) && 
+                    isValidUser(incoming()) &&
+                    incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'phoneNumber', 'address', 'updatedAt']);
+    }
+
+    match /orders/{orderId} {
+      // Secure List Query: resource.data.userId must match current auth
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      
+      allow create: if isSignedIn() && 
+                    isValidOrder(incoming()) && 
+                    incoming().status == 'pending_payment' &&
+                    incoming().createdAt == request.time;
+      
+      allow update: if isSignedIn() && (
+        // Action 1: Upload Receipt (Owner Only)
+        (isOwner(existing().userId) && 
+         existing().status == 'pending_payment' &&
+         incoming().diff(existing()).affectedKeys().hasOnly(['paymentReceipt', 'receiptTimestamp', 'status', 'updatedAt']) &&
+         incoming().status == 'paid' &&
+         incoming().paymentReceipt is string && incoming().paymentReceipt.size() <= 1000) ||
+        
+        // Action 2: Admin Status Update
+        (isAdmin() && 
+         incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']))
+      );
+
+      allow delete: if isAdmin();
+    }
+  }
+}

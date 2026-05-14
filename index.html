@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Haloa | Natural Pet Food</title>
+    <script>
+      (function() {
+        // Polyfill global for libraries that expect it
+        if (typeof global === 'undefined') {
+          window.global = window;
+        }
+
+        // Specifically address "Cannot set property fetch of #<Window> which has only a getter"
+        // by adding a dummy setter to the fetch property.
+        function patchFetch(obj) {
+          try {
+            const desc = Object.getOwnPropertyDescriptor(obj, 'fetch') || 
+                        Object.getOwnPropertyDescriptor(Object.getPrototypeOf(obj), 'fetch');
+            
+            if (desc && !desc.set && desc.configurable) {
+              const originalFetch = obj.fetch;
+              Object.defineProperty(obj, 'fetch', {
+                get: function() { return originalFetch; },
+                set: function(v) { 
+                  console.warn('Ignoring attempt to overwrite fetch'); 
+                },
+                configurable: true,
+                enumerable: true
+              });
+            }
+          } catch (e) {
+            // If we can't patch it, we'll just have to hope for the best
+          }
+        }
+
+        patchFetch(window);
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

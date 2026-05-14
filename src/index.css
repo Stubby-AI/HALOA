@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Inter", sans-serif;
+  
+  --color-brand-bg: #fdfcf9;
+  --color-brand-border: #e5e1da;
+  --color-emerald-900: #064e3b;
+  --color-emerald-800: #065f46;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-bg text-[#1a1a1a] font-sans antialiased;
+  }
+}
