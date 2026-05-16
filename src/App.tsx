@@ -50,8 +50,7 @@ import {
   serverTimestamp, 
   orderBy,
   doc,
-  updateDoc,
-  setDoc
+  updateDoc
 } from 'firebase/firestore';
 
 // Types
@@ -240,7 +239,6 @@ export default function App() {
   const [orders, setOrders] = useState<any[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
 
-  // ── Auth listener ──────────────────────────────────────────────────────────
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
@@ -265,37 +263,6 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // ── Load cart from Firestore when user logs in ─────────────────────────────
-  useEffect(() => {
-    if (!user) {
-      setCart([]);
-      return;
-    }
-    const cartRef = doc(db, 'carts', user.uid);
-    const unsub = onSnapshot(cartRef, (snap) => {
-      if (snap.exists() && snap.data().items) {
-        setCart(snap.data().items);
-      } else {
-        setCart([]);
-      }
-    });
-    return () => unsub();
-  }, [user]);
-
-  // ── Save cart to Firestore whenever it changes ─────────────────────────────
-  useEffect(() => {
-  if (!user) return;
-  const cartRef = doc(db, 'carts', user.uid);
-  // undefined values remove பண்ணி save பண்ணு
-  const cleanCart = cart.map(item => {
-    const clean: any = { ...item };
-    if (clean.frequency === undefined) delete clean.frequency;
-    return clean;
-  });
-  setDoc(cartRef, { items: cleanCart, updatedAt: serverTimestamp() }, { merge: true });
-}, [cart, user]);
-
-  // ── Hero auto-rotate ───────────────────────────────────────────────────────
   useEffect(() => {
     const timer = setInterval(() => {
       if (currentView === 'home') {
@@ -353,7 +320,7 @@ export default function App() {
     if (!user) {
       const result = await signInWithGoogle();
       if (!result) return;
-      return;
+      return; // User is now signed in, allow them to click again or continue
     }
 
     if (checkoutStep === 'cart') {
@@ -365,6 +332,7 @@ export default function App() {
       }
       setCheckoutStep('payment');
     } else if (checkoutStep === 'payment') {
+      // Create Order in Firestore
       try {
         const orderData = {
           userId: user.uid,
@@ -379,9 +347,6 @@ export default function App() {
         setLastOrderId(docRef.id);
         setCheckoutStep('success');
         setCart([]);
-        // Clear cart in Firestore after order placed
-        const cartRef = doc(db, 'carts', user.uid);
-        await setDoc(cartRef, { items: [], updatedAt: serverTimestamp() }, { merge: true });
       } catch (error) {
         handleFirestoreError(error, OperationType.WRITE, 'orders');
       }
@@ -398,6 +363,7 @@ export default function App() {
         receiptTimestamp: serverTimestamp()
       });
 
+      // Send Email Notification to Admin
       await fetch('/api/notify-admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -621,7 +587,7 @@ export default function App() {
                             onClick={() => addToCart(PRODUCTS[activeHeroIdx], selectedSizes[PRODUCTS[activeHeroIdx].id] || 0)}
                             className="px-12 py-5 bg-emerald-900 text-white font-serif italic text-xl hover:bg-emerald-950 transition-all flex items-center gap-4 group"
                           >
-                            {isSubscribing ? 'Start Monthly Cycle' : 'Add to Delivery'} <div className="w-8 h-[1px] bg-white group-hover:w-12 transition-all"></div>
+                            {isSubscribing ? 'Start Monthly Cycle' : 'Add to Cart'} <div className="w-8 h-[1px] bg-white group-hover:w-12 transition-all"></div>
                           </button>
                           
                           <div className="flex gap-2">
@@ -637,7 +603,7 @@ export default function App() {
                       </div>
 
                       <div className="lg:col-span-5 relative">
-                        <div className="aspect-[4/5] bg-white rounded-t-[10rem] overflow-hidden border border-brand-border relative">
+                        <div className="aspect-[4/5] bg-emerald-900/5 rounded-t-[10rem] overflow-hidden border border-brand-border relative">
                           <AnimatePresence mode="wait">
                             <motion.img 
                               key={`${activeHeroIdx}-${selectedSizes[PRODUCTS[activeHeroIdx].id]}`}
@@ -647,7 +613,7 @@ export default function App() {
                               transition={{ duration: 0.4 }}
                               src={PRODUCTS[activeHeroIdx].options[selectedSizes[PRODUCTS[activeHeroIdx].id] || 0]?.image || PRODUCTS[activeHeroIdx].image} 
                               alt="Product Selection"
-                              className="w-full h-full object-contain grayscale-[20%] hover:grayscale-0 transition-all duration-700"
+                              className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700"
                               referrerPolicy="no-referrer"
                             />
                           </AnimatePresence>
@@ -730,11 +696,11 @@ export default function App() {
                   {PRODUCTS.map((product) => (
                     <div key={product.id} className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
                       <div className="lg:col-span-5 relative">
-                        <div className="aspect-[4/5] bg-white border border-brand-border overflow-hidden relative shadow-sm">
+                        <div className="aspect-[4/5] bg-brand-bg border border-brand-border overflow-hidden relative shadow-sm">
                           <img 
                             src={product.image} 
                             alt={product.name}
-                            className="w-full h-full object-contain grayscale-[20%] transition-all duration-1000 hover:grayscale-0"
+                            className="w-full h-full object-cover grayscale-[20%] transition-all duration-1000 hover:grayscale-0"
                             referrerPolicy="no-referrer"
                           />
                         </div>
@@ -769,7 +735,7 @@ export default function App() {
                                   <div className="flex items-center gap-4 relative z-10 cursor-pointer">
                                     {opt.image && (
                                       <div className="w-12 h-12 bg-gray-100 flex-shrink-0">
-                                        <img src={opt.image} alt="" className="w-full h-full object-contain grayscale-[20%]" />
+                                        <img src={opt.image} alt="" className="w-full h-full object-cover grayscale-[20%]" />
                                       </div>
                                     )}
                                     <div className="flex flex-col">
@@ -861,12 +827,14 @@ export default function App() {
                   <div className="space-y-12">
                     {orders.map((order) => (
                       <div key={order.id} className="bg-white border border-brand-border rounded-[2rem] overflow-hidden shadow-sm group">
+                        {/* Order Header */}
                         <div className="p-8 bg-brand-bg flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-brand-border">
                           <div>
                             <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400 block mb-1">Order ID: {order.id.slice(0, 8)}</span>
                             <span className="text-sm font-medium">{new Date(order.createdAt?.seconds * 1000).toLocaleDateString()} — LKR {order.total.toLocaleString()}</span>
                           </div>
                           
+                          {/* Order Status Timeline */}
                           <div className="flex items-center gap-8">
                             {[
                               { label: 'Packed', status: 'packed', icon: Package },
@@ -891,6 +859,7 @@ export default function App() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                          {/* Items List */}
                           <div className="p-8 border-b md:border-b-0 md:border-r border-brand-border">
                             <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800 block mb-6">Items</span>
                             <div className="space-y-4">
@@ -903,6 +872,7 @@ export default function App() {
                             </div>
                           </div>
 
+                          {/* Payment Receipt Upload */}
                           <div className="p-8 border-b md:border-b-0 md:border-r border-brand-border bg-emerald-900/5">
                             <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800 block mb-6">Payment Receipt</span>
                             {order.paymentReceipt ? (
@@ -932,6 +902,7 @@ export default function App() {
                             )}
                           </div>
 
+                          {/* Contact Info */}
                           <div className="p-8">
                             <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800 block mb-6">Delivery Details</span>
                             <div className="space-y-2 italic text-sm text-gray-600">
@@ -950,6 +921,7 @@ export default function App() {
           )}
         </AnimatePresence>
 
+
         {/* Footer */}
         <footer className="p-8 md:p-16 lg:p-24 flex flex-col md:flex-row justify-between items-end gap-12 border-t border-brand-border">
           <div className="space-y-4">
@@ -964,7 +936,7 @@ export default function App() {
         </footer>
       </div>
 
-      {/* Shopping Cart Drawer */}
+      {/* Shopping Cart Drawer (Preserved Logic, Re-Styled) */}
       <AnimatePresence>
         {isCartOpen && (
           <>
@@ -1013,7 +985,7 @@ export default function App() {
                         {cart.map((item) => (
                           <div key={`${item.id}-${item.size}-${item.isSubscription}-${item.frequency}`} className="flex gap-6 group border-b border-brand-border pb-6">
                             <div className="w-20 h-24 bg-gray-50 flex-shrink-0">
-                              <img src={item.image} alt={item.name} className="w-full h-full object-contain grayscale-[20%]" referrerPolicy="no-referrer" />
+                              <img src={item.image} alt={item.name} className="w-full h-full object-cover grayscale-[20%]" referrerPolicy="no-referrer" />
                             </div>
                             <div className="flex-1">
                               <div className="flex justify-between items-start mb-1">
