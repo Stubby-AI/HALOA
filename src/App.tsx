@@ -140,7 +140,7 @@ const PRODUCTS: Product[] = [
     id: 'collagen',
     name: 'Beef Collagen',
     description: 'Premium liquid collagen for dogs. Supports skin elasticity, coat shine, and joint mobility.',
-    image: '/images/4.png',
+    image: '/images/soon.webp',
     benefits: [
       { icon: Zap, text: 'Improves Skin Elasticity & Coat Shine' },
       { icon: Shield, text: 'Supports Healthy Gut Lining' },
