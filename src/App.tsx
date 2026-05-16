@@ -216,9 +216,9 @@ const PRODUCTS: Product[] = [
       }
     ],
     options: [
-      { size: '50g Bag', price: 399, image: '/images/soon.png' },
-      { size: '100g Bag', price: 699, image: '/images/soon.png' },
-      { size: '250g Bag', price: 1499, image: '/images/soon.png' }
+      { size: '50g Bag', price: 399, image: '/images/soon.webp' },
+      { size: '100g Bag', price: 699, image: '/images/soon.webp' },
+      { size: '250g Bag', price: 1499, image: '/images/soon.webp' }
     ]
   }
 ];
