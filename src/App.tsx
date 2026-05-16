@@ -284,10 +284,16 @@ export default function App() {
 
   // ── Save cart to Firestore whenever it changes ─────────────────────────────
   useEffect(() => {
-    if (!user) return;
-    const cartRef = doc(db, 'carts', user.uid);
-    setDoc(cartRef, { items: cart, updatedAt: serverTimestamp() }, { merge: true });
-  }, [cart, user]);
+  if (!user) return;
+  const cartRef = doc(db, 'carts', user.uid);
+  // undefined values remove பண்ணி save பண்ணு
+  const cleanCart = cart.map(item => {
+    const clean: any = { ...item };
+    if (clean.frequency === undefined) delete clean.frequency;
+    return clean;
+  });
+  setDoc(cartRef, { items: cleanCart, updatedAt: serverTimestamp() }, { merge: true });
+}, [cart, user]);
 
   // ── Hero auto-rotate ───────────────────────────────────────────────────────
   useEffect(() => {
