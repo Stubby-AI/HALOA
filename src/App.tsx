@@ -174,8 +174,8 @@ const PRODUCTS: Product[] = [
       }
     ],
     options: [
-      { size: '250ml Jar', price: 999, image: '/images/5.webp' },
-      { size: '500ml Jar', price: 1799, image: '/images/5.webp' }
+      { size: '250ml Jar', price: 999, image: '/images/soon.webp' },
+      { size: '500ml Jar', price: 1799, image: '/images/soon.webp' }
     ]
   },
   {
