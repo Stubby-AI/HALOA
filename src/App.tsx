@@ -268,7 +268,7 @@ export default function App() {
       if (currentView === 'home') {
         setActiveHeroIdx(prev => (prev + 1) % PRODUCTS.length);
       }
-    }, 8000);
+    }, 20000);
     return () => clearInterval(timer);
   }, [currentView]);
 
