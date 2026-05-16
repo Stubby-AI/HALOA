@@ -182,7 +182,7 @@ const PRODUCTS: Product[] = [
     id: 'liver-treats',
     name: 'Liver Treats',
     description: 'Iron-rich, protein-packed dehydrated liver bites. The ultimate high-value training reward.',
-    image: '/images/6.jpg',
+    image: '/images/soon.webp',
     benefits: [
       { icon: Zap, text: 'Concentrated Source of Vitamin A & Iron' },
       { icon: Smile, text: 'Highly Palatable for Training' },
