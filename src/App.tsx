@@ -97,7 +97,7 @@ const PRODUCTS: Product[] = [
     id: 'crunchy-paws',
     name: 'Crunchy Paws',
     description: 'Dehydrated chicken feet. A natural source of glucosamine and chondroitin for healthy joints.',
-    image: '/images/1.jpeg',
+    image: '/images/zoom.png',
     benefits: [
       { icon: Bone, text: 'Natural Glucosamine & Chondroitin for Joint Support' },
       { icon: Smile, text: 'Promotes Dental Hygiene through Chewing Action' },
