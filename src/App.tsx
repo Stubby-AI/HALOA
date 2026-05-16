@@ -96,7 +96,7 @@ const PRODUCTS: Product[] = [
   {
     id: 'crunchy-paws',
     name: 'Crunchy Paws',
-    description: ' chicken feet. A natural source of glucosamine and chondroitin for healthy joints.',
+    description: '  feet. A natural source of glucosamine and chondroitin for healthy joints.',
     image: '/images/1.jpeg',
     benefits: [
       { icon: Bone, text: 'Natural Glucosamine & Chondroitin for Joint Support' },
