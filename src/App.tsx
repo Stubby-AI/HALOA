@@ -587,7 +587,7 @@ export default function App() {
                             onClick={() => addToCart(PRODUCTS[activeHeroIdx], selectedSizes[PRODUCTS[activeHeroIdx].id] || 0)}
                             className="px-12 py-5 bg-emerald-900 text-white font-serif italic text-xl hover:bg-emerald-950 transition-all flex items-center gap-4 group"
                           >
-                            {isSubscribing ? 'Start Monthly Cycle' : 'Add to Delivery'} <div className="w-8 h-[1px] bg-white group-hover:w-12 transition-all"></div>
+                            {isSubscribing ? 'Start Monthly Cycle' : 'Add to Cart'} <div className="w-8 h-[1px] bg-white group-hover:w-12 transition-all"></div>
                           </button>
                           
                           <div className="flex gap-2">
