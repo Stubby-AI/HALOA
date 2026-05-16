@@ -559,7 +559,7 @@ export default function App() {
                             >
                               {opt.image && (
                                 <div className="absolute -right-4 -top-4 w-20 h-20 opacity-20 group-hover:opacity-40 transition-opacity">
-                                  <img src={opt.image} alt="" className="w-full h-full object-cover rounded-full" />
+                                  <img src={opt.image} alt="" className="w-full h-full object-cover object-center rounded-full" />
                                 </div>
                               )}
                               <span className={`text-[10px] uppercase tracking-widest mb-2 relative z-10 ${
