@@ -174,15 +174,15 @@ const PRODUCTS: Product[] = [
       }
     ],
     options: [
-      { size: '250ml Jar', price: 999, image: '/images/soon.webp' },
-      { size: '500ml Jar', price: 1799, image: '/images/soon.webp' }
+      { size: '250ml Jar', price: 999, image: '/images/soon.png' },
+      { size: '500ml Jar', price: 1799, image: '/images/soon.png' }
     ]
   },
   {
     id: 'liver-treats',
     name: 'Liver Treats',
     description: 'Iron-rich, protein-packed dehydrated liver bites. The ultimate high-value training reward.',
-    image: '/images/soon.webp',
+    image: '/images/soon.png',
     benefits: [
       { icon: Zap, text: 'Concentrated Source of Vitamin A & Iron' },
       { icon: Smile, text: 'Highly Palatable for Training' },
@@ -216,9 +216,9 @@ const PRODUCTS: Product[] = [
       }
     ],
     options: [
-      { size: '50g Bag', price: 399, image: '/images/soon.webp' },
-      { size: '100g Bag', price: 699, image: '/images/soon.webp' },
-      { size: '250g Bag', price: 1499, image: '/images/soon.webp' }
+      { size: '50g Bag', price: 399, image: '/images/soon.png' },
+      { size: '100g Bag', price: 699, image: '/images/soon.png' },
+      { size: '250g Bag', price: 1499, image: '/images/soon.png' }
     ]
   }
 ];
