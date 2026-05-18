@@ -230,9 +230,19 @@ export default function App() {
   const [selectedSizes, setSelectedSizes] = useState<Record<string, number>>({
     'crunchy-paws': 0
   });
+  // NEW STATE: Track selected option image for each product
+  const [selectedOptionImages, setSelectedOptionImages] = useState<Record<string, string>>({
+    'crunchy-paws': '/images/12pknew.png'
+  });
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [subFrequency, setSubFrequency] = useState(30);
   const [activeHeroIdx, setActiveHeroIdx] = useState(0);
+
+  // NEW FUNCTION: Handle size selection and update image
+  const handleSizeSelect = (productId: string, optionIndex: number, imageUrl: string) => {
+    setSelectedSizes(prev => ({ ...prev, [productId]: optionIndex }));
+    setSelectedOptionImages(prev => ({ ...prev, [productId]: imageUrl }));
+  };
 
   // Firebase Auth & Database State
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -320,7 +330,7 @@ export default function App() {
     if (!user) {
       const result = await signInWithGoogle();
       if (!result) return;
-      return; // User is now signed in, allow them to click again or continue
+      return;
     }
 
     if (checkoutStep === 'cart') {
@@ -332,7 +342,6 @@ export default function App() {
       }
       setCheckoutStep('payment');
     } else if (checkoutStep === 'payment') {
-      // Create Order in Firestore
       try {
         const orderData = {
           userId: user.uid,
@@ -363,7 +372,6 @@ export default function App() {
         receiptTimestamp: serverTimestamp()
       });
 
-      // Send Email Notification to Admin
       await fetch('/api/notify-admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -545,12 +553,12 @@ export default function App() {
                           )}
                         </div>
 
-                        {/* Product Size Selectors */}
+                        {/* Product Size Selectors - UPDATED with handleSizeSelect */}
                         <div className="flex flex-wrap gap-4 mb-16">
                           {PRODUCTS[activeHeroIdx].options.map((opt, idx) => (
                             <button
                               key={opt.size}
-                              onClick={() => setSelectedSizes(prev => ({ ...prev, [PRODUCTS[activeHeroIdx].id]: idx }))}
+                              onClick={() => handleSizeSelect(PRODUCTS[activeHeroIdx].id, idx, opt.image || PRODUCTS[activeHeroIdx].image)}
                               className={`flex flex-col p-6 w-40 transition-all border group relative overflow-hidden ${
                                 selectedSizes[PRODUCTS[activeHeroIdx].id] === idx
                                   ? 'bg-emerald-900 border-emerald-900 text-white shadow-2xl scale-105 z-10'
@@ -602,16 +610,17 @@ export default function App() {
                         </div>
                       </div>
 
+                      {/* Product Image - UPDATED to use selectedOptionImages */}
                       <div className="lg:col-span-5 relative">
                         <div className="aspect-[4/5] bg-emerald-900/5 rounded-t-[10rem] overflow-hidden border border-brand-border relative">
                           <AnimatePresence mode="wait">
                             <motion.img 
-                              key={`${activeHeroIdx}-${selectedSizes[PRODUCTS[activeHeroIdx].id]}`}
+                              key={`${activeHeroIdx}-${selectedOptionImages[PRODUCTS[activeHeroIdx].id] || selectedSizes[PRODUCTS[activeHeroIdx].id]}`}
                               initial={{ opacity: 0, scale: 1.1 }}
                               animate={{ opacity: 1, scale: 1 }}
                               exit={{ opacity: 0, scale: 0.95 }}
                               transition={{ duration: 0.4 }}
-                              src={PRODUCTS[activeHeroIdx].options[selectedSizes[PRODUCTS[activeHeroIdx].id] || 0]?.image || PRODUCTS[activeHeroIdx].image} 
+                              src={selectedOptionImages[PRODUCTS[activeHeroIdx].id] || PRODUCTS[activeHeroIdx].options[selectedSizes[PRODUCTS[activeHeroIdx].id] || 0]?.image || PRODUCTS[activeHeroIdx].image} 
                               alt="Product Selection"
                               className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700"
                               referrerPolicy="no-referrer"
@@ -698,7 +707,7 @@ export default function App() {
                       <div className="lg:col-span-5 relative">
                         <div className="aspect-[4/5] bg-brand-bg border border-brand-border overflow-hidden relative shadow-sm">
                           <img 
-                            src={product.image} 
+                            src={selectedOptionImages[product.id] || product.image} 
                             alt={product.name}
                             className="w-full h-full object-cover grayscale-[20%] transition-all duration-1000 hover:grayscale-0"
                             referrerPolicy="no-referrer"
@@ -730,7 +739,7 @@ export default function App() {
                                   className={`p-4 border flex justify-between items-center transition-all group overflow-hidden relative ${
                                     selectedSizes[product.id] === idx ? 'border-emerald-900 bg-emerald-900/5 shadow-sm' : 'border-brand-border'
                                   }`}
-                                  onClick={() => setSelectedSizes(prev => ({ ...prev, [product.id]: idx }))}
+                                  onClick={() => handleSizeSelect(product.id, idx, opt.image || product.image)}
                                 >
                                   <div className="flex items-center gap-4 relative z-10 cursor-pointer">
                                     {opt.image && (
@@ -921,7 +930,6 @@ export default function App() {
           )}
         </AnimatePresence>
 
-
         {/* Footer */}
         <footer className="p-8 md:p-16 lg:p-24 flex flex-col md:flex-row justify-between items-end gap-12 border-t border-brand-border">
           <div className="space-y-4">
@@ -937,7 +945,7 @@ export default function App() {
         </footer>
       </div>
 
-      {/* Shopping Cart Drawer (Preserved Logic, Re-Styled) */}
+      {/* Shopping Cart Drawer */}
       <AnimatePresence>
         {isCartOpen && (
           <>
