@@ -131,7 +131,7 @@ const PRODUCTS: Product[] = [
       }
     ],
     options: [
-      { size: '12 Pieces', price: 499, image: '/images/zoom.png' },
+      { size: '12 Pieces', price: 499, image: '/images/12pk.png' },
       { size: '20 Pieces', price: 799, image: '/images/2.jpeg' },
       { size: '40 Pieces', price: 1699, image: '/images/3.jpeg' },
     ]
