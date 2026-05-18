@@ -119,7 +119,7 @@ const PRODUCTS: Product[] = [
         title: 'Low-Temp Air Dried',
         description: 'We dehydrate our treats at precise temperatures to preserve vital nutrients and enzymes without harsh additives.',
         icon: Wind,
-        image: '/images/11.webp'
+        image: '/images/henlegs.png'
       },
       {
         step: '03',
