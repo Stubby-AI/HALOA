@@ -413,7 +413,7 @@ export default function App() {
         </div>
         <div className="h-24 w-[1px] bg-brand-border"></div>
         <div className="[writing-mode:vertical-rl] rotate-180 text-[10px] tracking-[0.3em] font-medium text-gray-400 uppercase">
-          Est. 2024
+          Est. 2026
         </div>
       </aside>
 
@@ -939,7 +939,7 @@ export default function App() {
             <p className="text-xs uppercase tracking-widest font-medium">Toronto, Canada</p>
           </div>
           <div className="text-[10px] leading-relaxed text-gray-400 max-w-xs text-right uppercase tracking-widest space-y-2">
-            <p>© 2024 Haloa Pet Co.</p>
+            <p>© 2026 Haloa Pet Co.</p>
             <p>All products are free from preservatives, additives, and hidden salt.</p>
           </div>
         </footer>
