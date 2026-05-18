@@ -111,7 +111,7 @@ const PRODUCTS: Product[] = [
         title: 'Locally Sourced',
         description: 'Supporting local Sri Lankan farmers while ensuring the shortest supply chain for maximum freshness.',
         icon: MapPin,
-        image: '/images/10.jpg'
+        image: '/images/legs.png'
       },
       {
         step: '02',
