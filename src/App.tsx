@@ -196,7 +196,7 @@ const PRODUCTS: Product[] = [
         title: 'Premium Raw Cuts',
         description: 'We select only the finest human-grade liver, ensuring every bite is packed with vitamins.',
         icon: Check,
-        image: '/images/16.jpg'
+        image: '/images/puppy.png'
       },
       {
         step: '02',
