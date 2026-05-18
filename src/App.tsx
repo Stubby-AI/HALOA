@@ -154,7 +154,7 @@ const PRODUCTS: Product[] = [
         title: 'Ethically Farmed',
         description: 'Our beef collagen is sourced from grass-fed cattle, ensuring a pure and ethical supply chain.',
         icon: Leaf,
-        image: 'images/13.webp'
+        image: 'images/abcd.jpg'
       },
       {
         step: '02',
