@@ -204,7 +204,7 @@ const PRODUCTS: Product[] = [
         title: 'Precision Slicing',
         description: 'Bite-sized pieces are carefully cut to maintain texture while allowing for even dehydration.',
         icon: Sparkles,
-        image: 'images/17.jpg'
+        image: 'images/18.jpg'
       },
       {
         step: '03',
@@ -212,7 +212,7 @@ const PRODUCTS: Product[] = [
         title: 'Fresh Dehydration',
         description: 'Cold-air dehydration locks in nutrition without compromising the high-value flavor profile.',
         icon: Wind,
-        image: '/images/18.jpg'
+        image: '/images/17.jpg'
       }
     ],
     options: [
