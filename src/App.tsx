@@ -170,7 +170,7 @@ const PRODUCTS: Product[] = [
         title: 'Triple Filtration',
         description: 'Fine filtration ensures a smooth, highly concentrated liquid collagen free from any sediment or additives.',
         icon: Shield,
-        image: '/images/15.jpg'
+        image: '/images/beaf.jpeg'
       }
     ],
     options: [
