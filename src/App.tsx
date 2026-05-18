@@ -926,8 +926,9 @@ export default function App() {
         <footer className="p-8 md:p-16 lg:p-24 flex flex-col md:flex-row justify-between items-end gap-12 border-t border-brand-border">
           <div className="space-y-4">
             <span className="text-[10px] uppercase tracking-widest text-gray-400">Inquiries</span>
-            <p className="text-2xl font-serif italic">hello@haloa.pets</p>
+            <p className="text-2xl font-serif italic">hello@haloa.pet</p>
             <p className="text-xs uppercase tracking-widest font-medium">Colombo, Sri Lanka</p>
+            <p className="text-xs uppercase tracking-widest font-medium">Toronto, Canada</p>
           </div>
           <div className="text-[10px] leading-relaxed text-gray-400 max-w-xs text-right uppercase tracking-widest space-y-2">
             <p>© 2024 Haloa Pet Co.</p>
