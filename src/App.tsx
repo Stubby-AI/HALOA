@@ -1,4 +1,4 @@
-/**
+45/**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -538,7 +538,7 @@ export default function App() {
                               animate={{ opacity: 1, y: 0 }}
                               className="flex gap-2 p-2 bg-white border border-brand-border rounded-lg max-w-xs"
                             >
-                              {[30, 45, 60].map(days => (
+                              {[20, 30, 45].map(days => (
                                 <button
                                   key={days}
                                   onClick={() => setSubFrequency(days)}
